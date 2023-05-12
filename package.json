@@ -9,6 +9,7 @@
   "dependencies": {
     "@slidev/cli": "^0.40.16",
     "@slidev/theme-default": "*",
-    "@slidev/theme-seriph": "*"
+    "@slidev/theme-seriph": "*",
+    "@tensorflow/tfjs": "^4.5.0"
   }
 }

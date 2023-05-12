@@ -1,6 +1,7 @@
 ---
 layout: cover
-background: './images/pietro-jeng-n6B49lTx7NM-unsplash.jpg'
+background: ./images/pietro-jeng-n6B49lTx7NM-unsplash.jpg
+title: tfjs 介绍及应用
 ---
 
 # tfjs 介绍及应用
@@ -96,7 +97,7 @@ Deep Learning
 - 神经元
   - 神经元是机器学习中的一个基本概念，它是一种数学模型，用于模拟人类神经系统中的神经元。
   - 在机器学习中，神经元通常被用作构建神经网络的基本单元。
-  - 每个神经元接收一组输入，对这些输入进行加权处理，并通过一个激活函数将结果输出。
+  - 每个神经元接收一组输入，对这些输入进行加权处理，并通过一个 **激活函数** 将结果输出。
   - 神经元的输出可以被传递给其他神经元，从而构建出一个复杂的神经网络，用于解决各种机器学习问题。
 
 ---
@@ -128,11 +129,14 @@ Deep Learning
 神经元可以理解为一个类，它包含一个权重和一个偏置，输入几个值，输出一个值。
 
 ```ts
+// 激活函数
+function activation(x: number): number {
+  return x > 0 ? 1 : 0
+}
+
 class Node {
-  // 权重
-  private weight: number
-  // 偏置
-  private bias: number
+  private weight: number // 权重
+  private bias: number // 偏置
 
   // 设置默认值
   constructor(weight: number, bias: number) {
@@ -142,9 +146,84 @@ class Node {
 
   public run(inputs: number[]): number {
     // 通过权重和偏置计算出结果
-    return inputs.reduce((sum, input) => sum + input * this.weight + this.bias, 0) 
+    const sum = inputs.reduce((sum, input) => sum + input * this.weight + this.bias, 0) 
+    // 通过一个激活函数输出
+    return activation(sum)
   }
 }
 ```
 
 \* 缺陷： 没有学习能力
+
+---
+---
+## 一个简单的神经网络
+
+将多个神经元连接起来。
+
+```ts
+const node1 = new Node(0.1, 0.1)
+const node2 = new Node(0.1, -0.1)
+
+const node3 = new Node(-0.1, 0.1)
+const node4 = new Node(0.2, 0.05)
+const node5 = new Node(-0.1, 0.2)
+
+const node6 = new Node(0.1, 0.1)
+
+const layers = [
+  [node1, node2],        // 2个输入神经元
+  [node3, node4, node5], // 3个隐藏神经元
+  [node6]                // 1个输出神经元
+]
+
+```
+
+---
+---
+## tfjs 框架介绍
+
+> TensorFlow.js 是一个用于使用 JavaScript 进行机器学习开发的库。
+> 
+> 使用 JavaScript 开发机器学习模型，并直接在浏览器或 Node.js 中使用机器学习模型。
+
+```ts
+import * as tf from '@tensorflow/tfjs';
+
+function getModel() {
+  const model = tf.sequential();
+
+  model.add(tf.layers.dense({
+    inputShape: [1], // 一维向量
+    units: 2
+  }));
+  model.add(tf.layers.dense({units: 3}));
+  model.add(tf.layers.dense({units: 1}));
+
+  return model
+}
+
+```
+
+---
+---
+## 运行一下
+
+<tfjs-run-1></tfjs-run-1>
+
+为什么每次值都不一样？
+```vue
+<script setup lang=ts>
+// 使用同一个模型
+// const model = getModel()
+function run() {
+  //每次都生成新的模型
+  const model = getModel()
+}
+</script>
+<template>
+  <button @click="run"></button>
+</template>
+```
+
+<tfjs-run-2></tfjs-run-2>
