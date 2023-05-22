@@ -34,7 +34,7 @@ Machine Learning
 
 - 普通函数
 ```ts
-// 有程序员来编写函数的功能
+// 由程序员来编写函数的功能
 function add(a, b) {
   return a + b
 }
@@ -129,26 +129,23 @@ Deep Learning
 神经元可以理解为一个类，它包含一个权重和一个偏置，输入几个值，输出一个值。
 
 ```ts
-// 激活函数
-function activation(x: number): number {
+function activation(x: number): number { // 激活函数
   return x > 0 ? 1 : 0
 }
 
 class Node {
-  private weight: number // 权重
+  private weights: number[] // 权重
   private bias: number // 偏置
-
-  // 设置默认值
-  constructor(weight: number, bias: number) {
-    this.weight = weight
+  constructor(weights: number[], bias: number) {
+    this.weights = weights
     this.bias = bias
   }
-
-  public run(inputs: number[]): number {
-    // 通过权重和偏置计算出结果
-    const sum = inputs.reduce((sum, input) => sum + input * this.weight + this.bias, 0) 
-    // 通过一个激活函数输出
-    return activation(sum)
+  public forward(inputs: number[]): number {
+    let sum = 0
+    for (let i = 0; i < inputs.length; i++) {
+      sum += inputs[i] * this.weights[i] + this.bias // 通过权重和偏置计算出结果
+    }
+    return activation(sum) // 通过一个激活函数输出
   }
 }
 ```
@@ -157,19 +154,48 @@ class Node {
 
 ---
 ---
+## 反向传播
+
+```ts
+const optimizer = (learnRate: number) {
+  return (weight: number, gradient: number) => {
+    return weight - learnRate * gradient
+  }
+}
+
+class Node {
+  ...
+  /**
+   * @param target 目标值
+   * @param result 实际值
+   */
+  function backward(target: number, result: number, input: number, idx: number) {
+    // 计算梯度
+    const loss = result - target
+    const gradient = loss * input
+    // 更新权重和偏置
+    this.weights[idx] = optimizer(this.weights[idx], gradient)
+    this.bias = optimizer(this.bias, gradient)
+  }
+  ...
+}
+```
+
+---
+---
 ## 一个简单的神经网络
 
 将多个神经元连接起来。
 
 ```ts
-const node1 = new Node(0.1, 0.1)
-const node2 = new Node(0.1, -0.1)
+const node1 = new Node([0.1, 0.2], 0.1)
+const node2 = new Node([0.1, 0.1], -0.1)
 
-const node3 = new Node(-0.1, 0.1)
-const node4 = new Node(0.2, 0.05)
-const node5 = new Node(-0.1, 0.2)
+const node3 = new Node([-0.1, 0.1], 0.1)
+const node4 = new Node([0.2, -0.1], 0.05)
+const node5 = new Node([-0.1, 0.2], 0.2)
 
-const node6 = new Node(0.1, 0.1)
+const node6 = new Node([0.1, 0.2, 0.2], 0.1)
 
 const layers = [
   [node1, node2],        // 2个输入神经元
