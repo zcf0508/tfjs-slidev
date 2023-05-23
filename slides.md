@@ -188,14 +188,18 @@ class Node {
 将多个神经元连接起来。
 
 ```ts
-const node1 = new Node([0.1, 0.2], 0.1)
-const node2 = new Node([0.1, 0.1], -0.1)
+/**
+ * 生成 -1 ~ 1 之间的数
+ */
+const getRandom = () => Math.random() * 2 - 1
+const node1 = new Node([getRandom(), getRandom()], getRandom())
+const node2 = new Node([getRandom(), getRandom()], getRandom())
 
-const node3 = new Node([-0.1, 0.1], 0.1)
-const node4 = new Node([0.2, -0.1], 0.05)
-const node5 = new Node([-0.1, 0.2], 0.2)
+const node3 = new Node([getRandom(), getRandom()], getRandom())
+const node4 = new Node([getRandom(), getRandom()], getRandom())
+const node5 = new Node([getRandom(), getRandom()], getRandom())
 
-const node6 = new Node([0.1, 0.2, 0.2], 0.1)
+const node6 = new Node([getRandom(), getRandom(), getRandom()], getRandom())
 
 const layers = [
   [node1, node2],        // 2个输入神经元
@@ -253,3 +257,153 @@ function run() {
 ```
 
 <tfjs-run-2></tfjs-run-2>
+
+---
+---
+## 模型训练
+
+### 1. 准备数据
+
+```ts
+type TrainData = {
+  /**
+   * 像素点序列
+   * 每个像素点有三个值，分别代表红绿蓝三种颜色
+   */
+  image: number[][] | () => number[][]
+  type: number
+}
+
+type DataSet = {
+  trainSet: TrainData[]
+  testSet: TrainData[]
+}
+```
+
+---
+---
+
+## 模型训练
+
+### 2. 训练模型
+
+```ts
+const model = getModel()
+const dataSet = getDateSet()
+
+const trainDataImages = dataSet.trainData.map(item => item.image)
+const trainDataTypes = dataSet.trainData.map(item => item.type)
+const testDataImages = dataSet.testData.map(item => item.image)
+const testDataTypes = dataSet.testData.map(item => item.type)
+
+model.compile({
+  optimizer: tf.train.adam(),
+  loss: 'categoricalCrossentropy',
+  metrics: ['accuracy'],
+})
+
+model.fit(trainDataImages, trainDataTypes, {
+  validationData: [testDataImages, testDataTypes],
+  epochs: 10,
+})
+```
+
+🎇 训练完成！
+
+---
+---
+## tfjs 的优势和劣势
+
+- 优势
+  - 用户不需要设置开发环境，只要有浏览器就可以
+  - 使用 js/ts 进行开发，不需要学习新的语言
+  - 训练好的模型可以直接在浏览器中运行
+- 劣势
+  - 无法充分使用硬件资源，训练速度慢
+  - 由于浏览器限制，只能训练小模型
+
+---
+---
+## tfjs 相关资源
+
+- [tfjs 官网](https://www.tensorflow.org/js)
+- [教程 - 使用 CNN 识别手写数字](https://codelabs.developers.google.com/codelabs/tfjs-training-classfication/index.html?hl=zh-cn#0)
+- [TensoeFlow Hub](https://tfhub.dev/s?deployment-format=tfjs)
+
+---
+---
+## tensorflow 框架的简单介绍
+
+tensorflow 是基于 Python 语言的深度学习框架。
+
+```python
+import tensorflow as tf
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train),(x_test, y_test) = mnist.load_data()
+# 数据归一化
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Flatten(input_shape=(28, 28)),
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dropout(0.2),
+  tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=5)
+model.evaluate(x_test, y_test)
+```
+
+---
+---
+## 模型转换
+
+我们可以将使用 tensorflow 训练得到的模型，转换为 tfjs 所能接受的格式。
+
+这样我们就可以使用 python 进行模型的训练，然后使用 js/ts 运行训练好的模型。
+
+```shell
+pip install tensorflowjs
+
+tensorflowjs_converter \
+    --input_format=tf_saved_model \     # 输入模型的格式
+    --output_node_names='web_model' \   # 输出模型的名称
+    /mobilenet/saved_model \            # 输入模型的路径
+    /mobilenet/web_model                # 转换后输出的路径
+```
+
+转换后生成的文件路径
+
+- /web_model
+  - **model.json**
+  - /group1-shard
+
+---
+---
+## 模型转换
+
+在浏览器中加载转换后的模型
+
+```ts
+import * as tf from '@tensorflow/tfjs';
+import {loadGraphModel} from '@tensorflow/tfjs-converter';
+
+// 可以是本地地址，或者网络地址
+const MODEL_URL = 'model_directory/model.json';
+
+const model = await loadGraphModel(MODEL_URL);
+```
+
+**注意:**
+
+转换后的模型的输入和输出，一般要与 python 版本一致。
+
+如果 python 版本输入的是一个灰度图像，那么 js 版本的输入也应该是一个灰度图像。
+
+灰度图像就是说，图片不再由红绿蓝三个通道组成，而是只有一个灰度通道。
+
