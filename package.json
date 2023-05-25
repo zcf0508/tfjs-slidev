@@ -10,6 +10,9 @@
     "@slidev/cli": "^0.40.16",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
-    "@tensorflow/tfjs": "^4.5.0"
+    "@tensorflow-models/face-landmarks-detection": "^1.0.2",
+    "@tensorflow/tfjs": "^3.21.0",
+    "@tensorflow/tfjs-backend-wasm": "^3.21.0",
+    "@tensorflow/tfjs-backend-webgl": "^3.21.0"
   }
 }

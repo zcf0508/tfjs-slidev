@@ -188,18 +188,14 @@ class Node {
 将多个神经元连接起来。
 
 ```ts
-/**
- * 生成 -1 ~ 1 之间的数
- */
-const getRandom = () => Math.random() * 2 - 1
-const node1 = new Node([getRandom(), getRandom()], getRandom())
-const node2 = new Node([getRandom(), getRandom()], getRandom())
+const node1 = new Node([Math.random(), Math.random()], Math.random())
+const node2 = new Node([Math.random(), Math.random()], Math.random())
 
-const node3 = new Node([getRandom(), getRandom()], getRandom())
-const node4 = new Node([getRandom(), getRandom()], getRandom())
-const node5 = new Node([getRandom(), getRandom()], getRandom())
+const node3 = new Node([Math.random(), Math.random()], Math.random())
+const node4 = new Node([Math.random(), Math.random()], Math.random())
+const node5 = new Node([Math.random(), Math.random()], Math.random())
 
-const node6 = new Node([getRandom(), getRandom(), getRandom()], getRandom())
+const node6 = new Node([Math.random(), Math.random(), Math.random()], Math.random())
 
 const layers = [
   [node1, node2],        // 2个输入神经元
@@ -407,3 +403,7 @@ const model = await loadGraphModel(MODEL_URL);
 
 灰度图像就是说，图片不再由红绿蓝三个通道组成，而是只有一个灰度通道。
 
+---
+---
+## 试一下
+<tfjs-face-detection></tfjs-face-detection>
