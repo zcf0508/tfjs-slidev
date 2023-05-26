@@ -1,6 +1,6 @@
 ---
 layout: cover
-background: ./images/pietro-jeng-n6B49lTx7NM-unsplash.jpg
+background: /pietro-jeng-n6B49lTx7NM-unsplash.jpg
 title: tfjs 介绍及应用
 ---
 
