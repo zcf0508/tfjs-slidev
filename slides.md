@@ -15,6 +15,8 @@ Machine Learning
 
 ### 🤔 定义
 
+<v-clicks>
+
 - 机器学习理论主要是设计和分析一些让计算机可以 **自动「学习」** 的算法。
 
 - 机器学习算法是一类从数据中自动分析获得规律，并利用规律对未知数据进行 **预测** 的算法。
@@ -27,13 +29,14 @@ Machine Learning
   - 马尔可夫链
   - ...
 
+</v-clicks>
 ---
 ---
 ## 机器学习
 Machine Learning
 
 - 普通函数
-```ts
+```ts {6-7|1-4|9}
 // 由程序员来编写函数的功能
 function add(a, b) {
   return a + b
@@ -43,7 +46,6 @@ const a = 1
 const b = 2
 
 const c = add(a, b)
-
 ```
 
 ---
@@ -53,7 +55,7 @@ Machine Learning
 
 - 机器学习
 
-```ts
+```ts {9-11|1-7|12-13|15-18}
 function learn(a, b, c) {
   return (a, b) => {
     // 通过学习得到的函数来预测 c
@@ -82,10 +84,13 @@ Deep Learning
 
 ### 🤔 定义
 
+<v-clicks>
+
 - 深度学习是机器学习的分支，是一种以人工神经网络为架构，对资料进行表征学习的算法。
 
 - 深度学习中的形容词“深度”是指在网络中使用多层。
 
+</v-clicks>
 
 ---
 ---
@@ -93,6 +98,8 @@ Deep Learning
 Deep Learning
 
 ### 相关概念
+
+<v-clicks depth=2>
 
 - 神经元
   - 神经元是机器学习中的一个基本概念，它是一种数学模型，用于模拟人类神经系统中的神经元。
@@ -100,6 +107,8 @@ Deep Learning
   - 每个神经元接收一组输入，对这些输入进行加权处理，并通过一个 **激活函数** 将结果输出。
   - 神经元的输出可以被传递给其他神经元，从而构建出一个复杂的神经网络，用于解决各种机器学习问题。
 
+</v-clicks>
+
 ---
 ---
 ## 深度学习
@@ -107,11 +116,15 @@ Deep Learning
 
 ### 相关概念
 
+<v-clicks depth=2>
+
 - 层
   - 在深度学习中，层是指神经网络中的一个组成部分，它由多个神经元组成，通常被用于对输入数据进行特征提取和转换。
   - 每一层接收上一层的输出作为输入，并对其进行一定的变换，然后将结果传递给下一层。
   - 深度学习中的神经网络通常由多个层组成，每一层都有自己的权重和偏置，用于对输入数据进行不同的变换和处理。
   - 通过不断堆叠多个层，深度学习模型可以学习到更加复杂的特征和模式，从而实现更加准确的预测和分类。
+
+</v-clicks>
 
 ---
 ---
@@ -128,7 +141,9 @@ Deep Learning
 
 神经元可以理解为一个类，它包含一个权重和一个偏置，输入几个值，输出一个值。
 
-```ts
+<v-click>
+
+```ts {6-7|12-18|1-3|all}
 function activation(x: number): number { // 激活函数
   return x > 0 ? 1 : 0
 }
@@ -150,13 +165,18 @@ class Node {
 }
 ```
 
+</v-click>
+
+<v-click>
+
 \* 缺陷： 没有学习能力
 
+</v-click>
 ---
 ---
 ## 反向传播
 
-```ts
+```ts {9-20|14-16|17-19|1-4|all}
 const optimizer = (learnRate: number) {
   return (weight: number, gradient: number) => {
     return weight - learnRate * gradient
@@ -187,6 +207,8 @@ class Node {
 
 将多个神经元连接起来。
 
+<v-click>
+
 ```ts
 const node1 = new Node([Math.random(), Math.random()], Math.random())
 const node2 = new Node([Math.random(), Math.random()], Math.random())
@@ -205,13 +227,21 @@ const layers = [
 
 ```
 
+</v-click>
+
 ---
 ---
 ## tfjs 框架介绍
 
+<v-click>
+
 > TensorFlow.js 是一个用于使用 JavaScript 进行机器学习开发的库。
 > 
 > 使用 JavaScript 开发机器学习模型，并直接在浏览器或 Node.js 中使用机器学习模型。
+
+</v-click>
+
+<v-click>
 
 ```ts
 import * as tf from '@tensorflow/tfjs';
@@ -231,14 +261,27 @@ function getModel() {
 
 ```
 
+</v-click>
+
 ---
 ---
 ## 运行一下
 
+<v-click>
+
 <tfjs-run-1></tfjs-run-1>
 
+</v-click>
+
+<v-click>
+
 为什么每次值都不一样？
-```vue
+
+</v-click>
+
+<v-click>
+
+```vue {5-6|2-3}
 <script setup lang=ts>
 // 使用同一个模型
 // const model = getModel()
@@ -252,13 +295,25 @@ function run() {
 </template>
 ```
 
+</v-click>
+
+<v-click>
+
 <tfjs-run-2></tfjs-run-2>
+
+</v-click>
 
 ---
 ---
 ## 模型训练
 
+<v-click>
+
 ### 1. 准备数据
+
+</v-click>
+
+<v-click>
 
 ```ts
 type TrainData = {
@@ -276,12 +331,20 @@ type DataSet = {
 }
 ```
 
+</v-click>
+
 ---
 ---
 
 ## 模型训练
 
+<v-click>
+
 ### 2. 训练模型
+
+</v-click>
+
+<v-click>
 
 ```ts
 const model = getModel()
@@ -298,17 +361,25 @@ model.compile({
   metrics: ['accuracy'],
 })
 
-model.fit(trainDataImages, trainDataTypes, {
+await model.fit(trainDataImages, trainDataTypes, {
   validationData: [testDataImages, testDataTypes],
   epochs: 10,
 })
 ```
 
+</v-click>
+
+<v-click>
+
 🎇 训练完成！
+
+</v-click>
 
 ---
 ---
 ## tfjs 的优势和劣势
+
+<v-clicks>
 
 - 优势
   - 用户不需要设置开发环境，只要有浏览器就可以
@@ -317,6 +388,8 @@ model.fit(trainDataImages, trainDataTypes, {
 - 劣势
   - 无法充分使用硬件资源，训练速度慢
   - 由于浏览器限制，只能训练小模型
+
+</v-clicks>
 
 ---
 ---
@@ -331,6 +404,8 @@ model.fit(trainDataImages, trainDataTypes, {
 ## tensorflow 框架的简单介绍
 
 tensorflow 是基于 Python 语言的深度学习框架。
+
+<v-click>
 
 ```python
 import tensorflow as tf
@@ -355,13 +430,21 @@ model.fit(x_train, y_train, epochs=5)
 model.evaluate(x_test, y_test)
 ```
 
+</v-click>
+
 ---
 ---
 ## 模型转换
 
+<v-click>
+
 我们可以将使用 tensorflow 训练得到的模型，转换为 tfjs 所能接受的格式。
 
 这样我们就可以使用 python 进行模型的训练，然后使用 js/ts 运行训练好的模型。
+
+</v-click>
+
+<v-click>
 
 ```shell
 pip install tensorflowjs
@@ -379,13 +462,17 @@ tensorflowjs_converter \
   - **model.json**
   - /group1-shard
 
+</v-click>
+
 ---
 ---
 ## 模型转换
 
 在浏览器中加载转换后的模型
 
-```ts
+<v-click>
+
+```ts {2|4-5|7}
 import * as tf from '@tensorflow/tfjs';
 import {loadGraphModel} from '@tensorflow/tfjs-converter';
 
@@ -395,15 +482,24 @@ const MODEL_URL = 'model_directory/model.json';
 const model = await loadGraphModel(MODEL_URL);
 ```
 
+</v-click>
+
+<v-click>
+
 **注意:**
 
-转换后的模型的输入和输出，一般要与 python 版本一致。
+</v-click>
 
-如果 python 版本输入的是一个灰度图像，那么 js 版本的输入也应该是一个灰度图像。
+<v-clicks>
 
-灰度图像就是说，图片不再由红绿蓝三个通道组成，而是只有一个灰度通道。
+- 转换后的模型的输入和输出，一般要与 python 版本一致。
+
+- 如果 python 版本输入的是一个灰度图像，那么 js 版本的输入也应该是一个灰度图像。灰度图像就是说，图片不再由红绿蓝三个通道组成，而是只有一个灰度通道。
+
+</v-clicks>
 
 ---
 ---
 ## 试一下
+
 <tfjs-face-detection></tfjs-face-detection>
