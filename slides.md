@@ -419,7 +419,7 @@ tensorflow 是基于 Python 语言的深度学习框架。
 
 ```python
 import tensorflow as tf
-mnist = tf.keras.datasets.mnist
+mnist = tf.keras.datasets.mnist # 手写数字灰度图像集
 
 (x_train, y_train),(x_test, y_test) = mnist.load_data()
 # 数据归一化
