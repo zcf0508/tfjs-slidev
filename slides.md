@@ -319,18 +319,26 @@ function run() {
 
 ```ts
 type TrainData = {
-  /**
-   * 像素点序列
-   * 每个像素点有三个值，分别代表红绿蓝三种颜色
-   */
-  image: number[][] | () => number[][]
-  type: number
+  addends: number[]
+  res: number
 }
 
 type DataSet = {
   trainSet: TrainData[]
   testSet: TrainData[]
 }
+
+const getDateSet = () => {
+  return {
+    trainSet: [
+      ...
+    ],
+    testSet: [
+      ...
+    ],
+  } as DataSet
+}
+
 ```
 
 </v-click>
@@ -352,10 +360,10 @@ type DataSet = {
 const model = getModel()
 const dataSet = getDateSet()
 
-const trainDataImages = dataSet.trainData.map(item => item.image)
-const trainDataTypes = dataSet.trainData.map(item => item.type)
-const testDataImages = dataSet.testData.map(item => item.image)
-const testDataTypes = dataSet.testData.map(item => item.type)
+const trainDataAddends = dataSet.trainSet.map(item => item.addends)
+const trainDataRes = dataSet.trainSet.map(item => item.res)
+const testDataAddends = dataSet.testSet.map(item => item.addends)
+const testDataRes = dataSet.testSet.map(item => item.res)
 
 model.compile({
   optimizer: tf.train.adam(),
@@ -363,8 +371,8 @@ model.compile({
   metrics: ['accuracy'],
 })
 
-await model.fit(trainDataImages, trainDataTypes, {
-  validationData: [testDataImages, testDataTypes],
+await model.fit(trainDataAddends, trainDataRes, {
+  validationData: [testDataAddends, testDataRes],
   epochs: 10,
 })
 ```
