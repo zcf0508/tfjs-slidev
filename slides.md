@@ -176,12 +176,14 @@ class Node {
 ---
 ## 反向传播
 
-```ts {9-20|14-16|17-19|1-4|all}
-const optimizer = (learnRate: number) {
+```ts {11-22|16-18|19-21|1-7|all}
+const getOptimizer = (learnRate: number) {
   return (weight: number, gradient: number) => {
     return weight - learnRate * gradient
   }
 }
+const lr = 1e-3
+const optimizer = getOptimizer(lr)
 
 class Node {
   ...
